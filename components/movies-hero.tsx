@@ -13,6 +13,7 @@ type MoviesHeroProps = {
 const MoviesHero = ({ movies }: MoviesHeroProps) => {
     const {
         activeMovie,
+        selectedMovieId,
         isTransitioning,
         imageLoaded,
         handleImageLoad,
@@ -49,7 +50,7 @@ const MoviesHero = ({ movies }: MoviesHeroProps) => {
                 <div className="w-full">
                     <MoviesCarousel
                         movies={movies}
-                        selectedMovieId={activeMovie.id}
+                        selectedMovieId={selectedMovieId}
                         onSelectMovie={handleSelectMovie}
                         showHeader={false}
                         compact
