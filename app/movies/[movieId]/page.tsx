@@ -22,7 +22,6 @@ import { MovieDetailsCrew } from "@/features/movies/components/movie-details-cre
 import { MovieDetailsMedia } from "@/features/movies/components/movie-details-media"
 import { MovieDetailsImages } from "@/features/movies/components/movie-details-images"
 import { MovieDetailsRecommendations } from "@/features/movies/components/movie-details-recommendations"
-import { MovieDetailsSectionNav } from "@/features/movies/components/movie-details-section-nav"
 
 type MovieDetailsPageProps = {
   params: Promise<{ movieId: string }>
@@ -86,7 +85,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
           <MovieDetailsHero movie={movie} />
         </section>
 
-        <MovieDetailsSectionNav />
+        {/* <MovieDetailsSectionNav /> */}
 
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)]">
           <div className="space-y-4">

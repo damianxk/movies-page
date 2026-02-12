@@ -18,7 +18,7 @@ export function MovieDetailsCast({ movieId, cast }: MovieDetailsCastProps) {
       <h2 className="text-lg font-semibold text-white">Top billed cast</h2>
 
       {topBilledCast.length ? (
-        <div className="mt-3 flex gap-3 overflow-x-auto pb-2">
+        <div className="mt-3 flex flex-wrap gap-3 overflow-x-auto pb-2">
           {topBilledCast.map((member) => (
             <article key={member.id} className="group min-w-[120px] max-w-[120px]">
               <div className="mx-auto relative h-14 w-14 overflow-hidden rounded-full bg-white/10">
