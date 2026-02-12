@@ -3,6 +3,7 @@ const SECTION_LINKS = [
   { id: "cast", label: "Cast" },
   { id: "crew", label: "Crew" },
   { id: "media", label: "Media" },
+  { id: "images", label: "Images" },
   { id: "recommendations", label: "Similar" },
   { id: "details", label: "Details" },
 ]

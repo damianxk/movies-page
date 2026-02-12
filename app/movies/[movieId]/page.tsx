@@ -3,6 +3,7 @@ import { getMovieDetails } from "@/features/movies/server/get-movie-details"
 import { getMovieCredits } from "@/features/movies/server/get-movie-credits"
 import { getMovieVideos } from "@/features/movies/server/get-movie-videos"
 import { getMovieRecommendations } from "@/features/movies/server/get-movie-recommendations"
+import { getMovieImages } from "@/features/movies/server/get-movie-images"
 import { getMovieBackdropUrl } from "@/lib/movie-utils"
 import {
   formatBoolean,
@@ -19,6 +20,7 @@ import { MovieDetailsJson } from "@/features/movies/components/movie-details-jso
 import { MovieDetailsCast } from "@/features/movies/components/movie-details-cast"
 import { MovieDetailsCrew } from "@/features/movies/components/movie-details-crew"
 import { MovieDetailsMedia } from "@/features/movies/components/movie-details-media"
+import { MovieDetailsImages } from "@/features/movies/components/movie-details-images"
 import { MovieDetailsRecommendations } from "@/features/movies/components/movie-details-recommendations"
 import { MovieDetailsSectionNav } from "@/features/movies/components/movie-details-section-nav"
 
@@ -39,10 +41,11 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
     notFound()
   }
 
-  const [movie, credits, videos, recommendations] = await Promise.all([
+  const [movie, credits, videos, images, recommendations] = await Promise.all([
     getMovieDetails(parsedMovieId),
     getMovieCredits(parsedMovieId),
     getMovieVideos(parsedMovieId),
+    getMovieImages(parsedMovieId),
     getMovieRecommendations(parsedMovieId),
   ])
 
@@ -117,6 +120,8 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
             <section id="media" className="scroll-mt-32">
               <MovieDetailsMedia videos={videos} />
             </section>
+
+            <MovieDetailsImages images={images} />
 
             <section id="recommendations" className="scroll-mt-32">
               <MovieDetailsRecommendations movies={recommendations} />
