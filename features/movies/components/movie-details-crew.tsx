@@ -1,4 +1,5 @@
 import { type CrewMember } from "@/features/movies/types/movie-credits"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 
 type MovieDetailsCrewProps = {
   crew: CrewMember[]
@@ -20,7 +21,7 @@ export function MovieDetailsCrew({ crew }: MovieDetailsCrewProps) {
 
   return (
     <section className="py-2">
-      <h2 className="text-xl font-semibold text-white">Crew</h2>
+      <MovieSectionTitle title="Crew" count={featuredCrew.length} />
 
       {featuredCrew.length ? (
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,3 +1,5 @@
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
+
 type FactItem = {
   label: string
   value: string
@@ -10,7 +12,7 @@ type MovieDetailsFactsProps = {
 export function MovieDetailsFacts({ facts }: MovieDetailsFactsProps) {
   return (
     <section className="py-2">
-      <h2 className="text-xl font-semibold text-white">Movie data</h2>
+      <MovieSectionTitle title="Movie data" count={facts.length} />
       <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">
         {facts.map((fact) => (
           <div key={fact.label} className="pb-2">

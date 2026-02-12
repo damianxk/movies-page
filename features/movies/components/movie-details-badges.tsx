@@ -1,3 +1,5 @@
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
+
 type MovieDetailsBadgesProps = {
   title: string
   items: string[]
@@ -6,7 +8,7 @@ type MovieDetailsBadgesProps = {
 export function MovieDetailsBadges({ title, items }: MovieDetailsBadgesProps) {
   return (
     <section className="py-2">
-      <h2 className="text-xl font-semibold text-white">{title}</h2>
+      <MovieSectionTitle title={title} count={items.length} />
       <div className="mt-4 flex flex-wrap gap-2">
         {items.length ? (
           items.map((item) => (

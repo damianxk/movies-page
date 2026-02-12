@@ -1,7 +1,7 @@
 import Image from "next/image"
-import Link from "next/link"
 import { type CastMember } from "@/features/movies/types/movie-credits"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 
 type MovieDetailsCastProps = {
   movieId: number
@@ -15,7 +15,11 @@ export function MovieDetailsCast({ movieId, cast }: MovieDetailsCastProps) {
 
   return (
     <section className="py-2">
-      <h2 className="text-lg font-semibold text-white">Top billed cast</h2>
+      <MovieSectionTitle
+        title="Top billed cast"
+        count={topBilledCast.length}
+        href={`/movies/${movieId}/credits`}
+      />
 
       {topBilledCast.length ? (
         <div className="mt-3 flex flex-wrap gap-3 overflow-x-auto pb-2">
@@ -42,15 +46,6 @@ export function MovieDetailsCast({ movieId, cast }: MovieDetailsCastProps) {
       ) : (
         <p className="mt-4 text-sm text-slate-300/80">No cast data available.</p>
       )}
-
-      <div className="mt-4">
-        <Link
-          href={`/movies/${movieId}/credits`}
-          className="text-xs font-semibold uppercase tracking-wide text-slate-300 transition-colors hover:text-white"
-        >
-          Full cast list
-        </Link>
-      </div>
     </section>
   )
 }

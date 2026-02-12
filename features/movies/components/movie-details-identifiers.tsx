@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { type MovieDetails } from "@/features/movies/types/movie-details"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 
 type MovieDetailsIdentifiersProps = {
   movie: MovieDetails
@@ -8,7 +9,7 @@ type MovieDetailsIdentifiersProps = {
 export function MovieDetailsIdentifiers({ movie }: MovieDetailsIdentifiersProps) {
   return (
     <section className="py-2">
-      <h2 className="text-xl font-semibold text-white">Identifiers & links</h2>
+      <MovieSectionTitle title="Identifiers & links" />
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div>
           <p className="text-xs uppercase tracking-wider text-slate-300/75">TMDB ID</p>

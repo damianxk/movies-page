@@ -1,4 +1,5 @@
 import { type MovieDetails } from "@/features/movies/types/movie-details"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 
 type MovieDetailsJsonProps = {
   movie: MovieDetails
@@ -7,6 +8,7 @@ type MovieDetailsJsonProps = {
 export function MovieDetailsJson({ movie }: MovieDetailsJsonProps) {
   return (
     <section className="py-2">
+      <MovieSectionTitle title="API payload" />
       <details>
         <summary className="cursor-pointer text-base font-semibold text-white">
           Full API payload

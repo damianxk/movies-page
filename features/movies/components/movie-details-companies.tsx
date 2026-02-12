@@ -1,4 +1,5 @@
 import { type ProductionCompany } from "@/features/movies/types/movie-details"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 
 type MovieDetailsCompaniesProps = {
   companies: ProductionCompany[]
@@ -7,7 +8,7 @@ type MovieDetailsCompaniesProps = {
 export function MovieDetailsCompanies({ companies }: MovieDetailsCompaniesProps) {
   return (
     <section className="py-2">
-      <h2 className="text-xl font-semibold text-white">Production companies</h2>
+      <MovieSectionTitle title="Production companies" count={companies.length} />
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {companies.length ? (
           companies.map((company) => (

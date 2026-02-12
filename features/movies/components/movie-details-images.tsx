@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react"
 import { createPortal } from "react-dom"
 import { type MovieBackdropImage } from "@/features/movies/types/movie-images"
 import { getMovieBackdropUrl } from "@/lib/movie-utils"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 
 type MovieDetailsImagesProps = {
   images: MovieBackdropImage[]
@@ -82,11 +83,7 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
 
   return (
     <section id="images" className="scroll-mt-32 py-1">
-      <div className="flex items-end gap-2">
-        <div className="h-7 w-1 rounded-full bg-primary" />
-        <h2 className="text-xl font-semibold text-white">Photos</h2>
-        <span className="text-sm text-slate-300/80">{sortedImages.length}</span>
-      </div>
+      <MovieSectionTitle title="Photos" count={sortedImages.length} />
 
       {visibleImages.length ? (
         <div className="mt-3 space-y-3">

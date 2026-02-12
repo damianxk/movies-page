@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { type Movie } from "@/types/movie"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 import {
   Carousel,
   CarouselContent,
@@ -22,7 +23,7 @@ export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendati
 
   return (
     <section className="py-1">
-      <h2 className="text-lg font-semibold text-white">More like this</h2>
+      <MovieSectionTitle title="More like this" count={visibleMovies.length} />
 
       {visibleMovies.length ? (
         <Carousel

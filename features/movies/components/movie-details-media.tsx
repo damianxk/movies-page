@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import Link from "next/link"
 import { type MovieVideo } from "@/features/movies/types/movie-videos"
+import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 
 type MovieDetailsMediaProps = {
   videos: MovieVideo[]
@@ -40,17 +41,11 @@ export function MovieDetailsMedia({ videos }: MovieDetailsMediaProps) {
 
   return (
     <section className="py-1">
-      <div className="flex items-end gap-2">
-        <div className="h-7 w-1 rounded-full bg-primary" />
-        <button
-          type="button"
-          onClick={() => setIsModalOpen(true)}
-          className="text-xl font-semibold text-white transition-colors hover:text-primary"
-        >
-          Videos
-        </button>
-        <span className="text-sm text-slate-300/80">{youtubeVideos.length}</span>
-      </div>
+      <MovieSectionTitle
+        title="Videos"
+        count={youtubeVideos.length}
+        onClick={() => setIsModalOpen(true)}
+      />
 
       {youtubeVideos.length ? (
         <div className="mt-3 space-y-4">
