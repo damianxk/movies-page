@@ -54,7 +54,7 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
             {filteredCast.map((member) => (
               <article
                 key={`${member.id}-${member.order}`}
-                className="grid grid-cols-[42px_1fr_1fr_auto] items-center gap-3 rounded-lg bg-black/25 px-3 py-2"
+                className="grid grid-cols-[42px_1fr] gap-2 rounded-lg bg-black/25 px-3 py-2 sm:grid-cols-[42px_1fr_1fr_auto] sm:items-center sm:gap-3"
               >
                 <div className="relative h-10 w-10 overflow-hidden rounded-full bg-white/10">
                   <Image
@@ -66,8 +66,8 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
                   />
                 </div>
                 <p className="text-sm font-medium text-white">{member.name}</p>
-                <p className="text-sm text-slate-300/85">{member.character || "Unknown role"}</p>
-                <p className="text-xs text-slate-400">#{member.order}</p>
+                <p className="text-xs text-slate-300/85 sm:text-sm">{member.character || "Unknown role"}</p>
+                <p className="text-[11px] text-slate-400 sm:text-xs">#{member.order}</p>
               </article>
             ))}
           </div>

@@ -80,7 +80,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
         <div className="absolute inset-0 bg-linear-to-r from-[#030711]/70 via-transparent to-[#030711]/65" />
       </div>
 
-      <div className="relative z-10 flex min-h-svh w-full flex-col gap-4 px-4 pb-6 pt-24 sm:px-6 lg:px-12 lg:pb-8">
+      <div className="relative z-10 flex min-h-svh w-full flex-col gap-4 overflow-x-clip px-4 pb-6 pt-24 sm:px-6 lg:px-12 lg:pb-8">
         <section id="overview" className="scroll-mt-32">
           <MovieDetailsHero movie={movie} />
         </section>
@@ -88,7 +88,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
         {/* <MovieDetailsSectionNav /> */}
 
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)]">
-          <div className="space-y-4">
+          <div className="min-w-0 space-y-4">
             <section id="cast" className="scroll-mt-32">
               <MovieDetailsCast movieId={movie.id} cast={safeCast} />
             </section>
@@ -111,11 +111,11 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
                 items={movie.production_countries.map((country) => country.name)}
               />
               <MovieDetailsCompanies companies={movie.production_companies} />
-              <MovieDetailsJson movie={movie} />
+              {/* <MovieDetailsJson movie={movie} /> */}
             </section>
           </div>
 
-          <aside className="space-y-4 xl:pt-1">
+          <aside className="min-w-0 space-y-4 xl:pt-1">
             <section id="media" className="scroll-mt-32">
               <MovieDetailsMedia videos={videos} />
             </section>

@@ -32,7 +32,7 @@ export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendati
             loop: false,
             containScroll: "trimSnaps",
           }}
-          className="mt-2 pr-7"
+          className="mt-2 overflow-hidden pr-7"
         >
           <CarouselContent className="-ml-2">
             {visibleMovies.map((movie) => (
@@ -63,8 +63,8 @@ export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendati
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="-left-2 top-[40%] border-0 bg-black/45 text-white hover:bg-black/65" />
-          <CarouselNext className="right-0 top-[40%] border-0 bg-black/45 text-white hover:bg-black/65" />
+          <CarouselPrevious className="left-1 top-[40%] border-0 bg-black/45 text-white hover:bg-black/65" />
+          <CarouselNext className="right-1 top-[40%] border-0 bg-black/45 text-white hover:bg-black/65" />
         </Carousel>
       ) : (
         <p className="mt-4 text-sm text-slate-300/80">No recommendations available.</p>

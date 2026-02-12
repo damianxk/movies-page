@@ -24,7 +24,7 @@ export function MovieDetailsCast({ movieId, cast }: MovieDetailsCastProps) {
       {topBilledCast.length ? (
         <div className="mt-3 flex flex-wrap gap-3 overflow-x-auto pb-2">
           {topBilledCast.map((member) => (
-            <article key={member.id} className="group min-w-[120px] max-w-[120px]">
+            <article key={member.id} className="group w-[112px] shrink-0">
               <div className="mx-auto relative h-14 w-14 overflow-hidden rounded-full bg-white/10">
                 <Image
                   src={getMoviePosterUrl(member.profile_path, "w500")}
