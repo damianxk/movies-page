@@ -21,7 +21,7 @@ export const HeroBackground = ({ movie, isVisible, onImageLoad }: HeroBackground
         <>
             <div
                 className={cn(
-                    "absolute inset-0 transition-opacity",
+                    "absolute inset-0 transition-opacity duration-500 ease-out",
                     isVisible ? "opacity-100" : "opacity-0"
                 )}
             >

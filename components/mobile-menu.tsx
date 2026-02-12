@@ -3,24 +3,19 @@
 
 import Link from "next/link"
 import { HugeiconsIcon } from "@hugeicons/react"
-import {
-    InstagramIcon,
-    TwitterIcon,
-    Facebook01Icon,
-    ArrowRight01Icon
-} from "@hugeicons/core-free-icons"
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import { Button } from "@/components/ui/button"
-import { SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet"
+import {
+    SheetClose,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
-
-type NavLink = {
-    label: string
-    href: string
-    active?: boolean
-}
+import { SOCIAL_ICONS, type NavLinkItem } from "@/components/navigation/nav-config"
 
 type MobileMenuProps = {
-    links: NavLink[]
+    links: NavLinkItem[]
 }
 
 export const MobileMenu = ({ links }: MobileMenuProps) => {
@@ -36,13 +31,13 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
             {/* 1. HEADER */}
             <SheetHeader className="px-6 py-8 border-b border-white/5 text-left">
                 <SheetTitle className="text-2xl font-black tracking-tighter uppercase text-white flex items-center gap-2">
-                    <span className="text-primary">///</span> Movie page
+                    <span className="text-primary">M</span> Movie page
                 </SheetTitle>
             </SheetHeader>
 
             {/* 2. NAVIGATION LINKS */}
             <nav className="flex-1 flex flex-col justify-center px-6 gap-6 overflow-y-auto">
-                {links.map((link, index) => (
+                {links.map((link) => (
                     <SheetClose key={link.label} asChild>
                         <Link
                             href={link.href}
@@ -79,7 +74,7 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
                             Follow us
                         </p>
                         <div className="flex gap-4">
-                            {[InstagramIcon, TwitterIcon, Facebook01Icon].map((Icon, i) => (
+                            {SOCIAL_ICONS.map((Icon, i) => (
                                 <Link
                                     key={i}
                                     href="#"
