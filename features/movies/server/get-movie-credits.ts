@@ -1,5 +1,6 @@
 import {
   type CastMember,
+  type CrewMember,
   type MovieCreditsResponse,
 } from "@/features/movies/types/movie-credits"
 
@@ -13,14 +14,19 @@ function getMovieCreditsUrl(movieId: number) {
   return `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`
 }
 
-export async function getMovieCredits(movieId: number): Promise<CastMember[]> {
+type MovieCreditsResult = {
+  cast: CastMember[]
+  crew: CrewMember[]
+}
+
+export async function getMovieCredits(movieId: number): Promise<MovieCreditsResult> {
   if (!Number.isFinite(movieId) || movieId <= 0) {
-    return []
+    return { cast: [], crew: [] }
   }
 
   const token = getTmdbToken()
   if (!token) {
-    return []
+    return { cast: [], crew: [] }
   }
 
   const response = await fetch(getMovieCreditsUrl(movieId), {
@@ -34,9 +40,12 @@ export async function getMovieCredits(movieId: number): Promise<CastMember[]> {
   })
 
   if (!response.ok) {
-    return []
+    return { cast: [], crew: [] }
   }
 
   const data = (await response.json()) as MovieCreditsResponse
-  return data.cast ?? []
+  return {
+    cast: data.cast ?? [],
+    crew: data.crew ?? [],
+  }
 }

@@ -6,6 +6,15 @@ export type CastMember = {
   order: number
 }
 
+export type CrewMember = {
+  id: number
+  name: string
+  job: string
+  department: string
+  profile_path: string | null
+}
+
 export type MovieCreditsResponse = {
   cast: CastMember[]
+  crew: CrewMember[]
 }

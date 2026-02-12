@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation"
 import { getMovieDetails } from "@/features/movies/server/get-movie-details"
 import { getMovieCredits } from "@/features/movies/server/get-movie-credits"
+import { getMovieVideos } from "@/features/movies/server/get-movie-videos"
+import { getMovieRecommendations } from "@/features/movies/server/get-movie-recommendations"
 import { getMovieBackdropUrl } from "@/lib/movie-utils"
 import {
   formatBoolean,
@@ -15,6 +17,10 @@ import { MovieDetailsCompanies } from "@/features/movies/components/movie-detail
 import { MovieDetailsIdentifiers } from "@/features/movies/components/movie-details-identifiers"
 import { MovieDetailsJson } from "@/features/movies/components/movie-details-json"
 import { MovieDetailsCast } from "@/features/movies/components/movie-details-cast"
+import { MovieDetailsCrew } from "@/features/movies/components/movie-details-crew"
+import { MovieDetailsMedia } from "@/features/movies/components/movie-details-media"
+import { MovieDetailsRecommendations } from "@/features/movies/components/movie-details-recommendations"
+import { MovieDetailsSectionNav } from "@/features/movies/components/movie-details-section-nav"
 
 type MovieDetailsPageProps = {
   params: Promise<{ movieId: string }>
@@ -33,9 +39,11 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
     notFound()
   }
 
-  const [movie, cast] = await Promise.all([
+  const [movie, credits, videos, recommendations] = await Promise.all([
     getMovieDetails(parsedMovieId),
     getMovieCredits(parsedMovieId),
+    getMovieVideos(parsedMovieId),
+    getMovieRecommendations(parsedMovieId),
   ])
 
   if (!movie) {
@@ -67,15 +75,31 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
         <div className="absolute inset-0 bg-linear-to-r from-[#030711]/70 via-transparent to-[#030711]/65" />
       </div>
 
-      <div className="relative z-10 flex min-h-svh w-full flex-col justify-end gap-5 px-4 pb-8 pt-24 sm:px-6 lg:px-12 lg:pb-10">
-        <MovieDetailsHero movie={movie} />
+      <div className="relative z-10 flex min-h-svh w-full flex-col gap-5 px-4 pb-8 pt-24 sm:px-6 lg:px-12 lg:pb-10">
+        <section id="overview" className="scroll-mt-32">
+          <MovieDetailsHero movie={movie} />
+        </section>
 
-        <div className="grid gap-5 xl:grid-cols-[1.4fr_1fr]">
-          <MovieDetailsCast cast={cast} />
+        <MovieDetailsSectionNav />
+
+        <section id="cast" className="grid scroll-mt-32 gap-5 xl:grid-cols-[1.4fr_1fr]">
+          <MovieDetailsCast cast={credits.cast} />
           <MovieDetailsFacts facts={facts} />
-        </div>
+        </section>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <section id="crew" className="scroll-mt-32">
+          <MovieDetailsCrew crew={credits.crew} />
+        </section>
+
+        <section id="media" className="scroll-mt-32">
+          <MovieDetailsMedia videos={videos} />
+        </section>
+
+        <section id="recommendations" className="scroll-mt-32">
+          <MovieDetailsRecommendations movies={recommendations} />
+        </section>
+
+        <section id="details" className="grid scroll-mt-32 gap-5 lg:grid-cols-2">
           <MovieDetailsBadges title="Genres" items={movie.genres.map((genre) => genre.name)} />
           <MovieDetailsBadges
             title="Spoken languages"
@@ -86,7 +110,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
             items={movie.production_countries.map((country) => country.name)}
           />
           <MovieDetailsIdentifiers movie={movie} />
-        </div>
+        </section>
 
         <MovieDetailsCompanies companies={movie.production_companies} />
         <MovieDetailsJson movie={movie} />
