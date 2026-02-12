@@ -4,6 +4,7 @@ import { getMovieCredits } from "@/features/movies/server/get-movie-credits"
 import { getMovieVideos } from "@/features/movies/server/get-movie-videos"
 import { getMovieRecommendations } from "@/features/movies/server/get-movie-recommendations"
 import { getMovieImages } from "@/features/movies/server/get-movie-images"
+import { getMovieReviews } from "@/features/movies/server/get-movie-reviews"
 import { getMovieBackdropUrl } from "@/lib/movie-utils"
 import {
   formatBoolean,
@@ -22,6 +23,7 @@ import { MovieDetailsCrew } from "@/features/movies/components/movie-details-cre
 import { MovieDetailsMedia } from "@/features/movies/components/movie-details-media"
 import { MovieDetailsImages } from "@/features/movies/components/movie-details-images"
 import { MovieDetailsRecommendations } from "@/features/movies/components/movie-details-recommendations"
+import { MovieDetailsReviews } from "@/features/movies/components/movie-details-reviews"
 
 type MovieDetailsPageProps = {
   params: Promise<{ movieId: string }>
@@ -40,12 +42,13 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
     notFound()
   }
 
-  const [movie, credits, videos, images, recommendations] = await Promise.all([
+  const [movie, credits, videos, images, recommendations, reviewsResponse] = await Promise.all([
     getMovieDetails(parsedMovieId),
     getMovieCredits(parsedMovieId),
     getMovieVideos(parsedMovieId),
     getMovieImages(parsedMovieId),
     getMovieRecommendations(parsedMovieId),
+    getMovieReviews(parsedMovieId, 1),
   ])
 
   if (!movie) {
@@ -111,6 +114,11 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
                 items={movie.production_countries.map((country) => country.name)}
               />
               <MovieDetailsCompanies companies={movie.production_companies} />
+              <MovieDetailsReviews
+                movieId={movie.id}
+                reviews={reviewsResponse.reviews}
+                totalResults={reviewsResponse.totalResults}
+              />
               {/* <MovieDetailsJson movie={movie} /> */}
             </section>
           </div>

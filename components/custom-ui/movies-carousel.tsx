@@ -84,7 +84,7 @@ const MoviesCarousel = ({
   if (!movies.length) {
     return (
       <div className="w-full text-center text-muted-foreground py-12">
-        Brak filmow do wyswietlenia.
+        No movies to display.
       </div>
     )
   }
@@ -95,7 +95,7 @@ const MoviesCarousel = ({
         <div className="w-full px-6 md:px-10 pb-4">
           <h1 className="text-2xl font-semibold">Popular Movies</h1>
           <p className="text-muted-foreground mt-1">
-            Selected: {selectedMovie?.title ?? "Brak"}
+            Selected: {selectedMovie?.title ?? "None"}
           </p>
         </div>
       ) : null}

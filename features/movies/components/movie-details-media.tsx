@@ -127,7 +127,7 @@ export function MovieDetailsMedia({ videos }: MovieDetailsMediaProps) {
             className="absolute inset-0 bg-black/75 backdrop-blur-sm"
           />
 
-          <div className="relative z-10 w-full max-w-6xl overflow-hidden rounded-2xl bg-[#071022] p-4 sm:p-6">
+          <div className="relative z-10 w-full max-w-6xl max-h-[70vh] overflow-hidden rounded-2xl bg-[#071022] p-4 sm:p-6">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="h-7 w-1 rounded-full bg-primary" />
@@ -143,7 +143,7 @@ export function MovieDetailsMedia({ videos }: MovieDetailsMediaProps) {
               </button>
             </div>
 
-            <div className="max-h-[75vh] overflow-y-auto pr-1">
+            <div className="max-h-[58vh] overflow-y-auto pr-1">
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {modalVideos.map((video) => (
                   <Link

@@ -72,7 +72,7 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-300/80">Brak wynikow dla podanej frazy.</p>
+          <p className="mt-3 text-sm text-slate-300/80">No results found for this query.</p>
         )}
       </section>
 
@@ -94,7 +94,7 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-300/80">Brak wynikow dla podanej frazy.</p>
+          <p className="mt-3 text-sm text-slate-300/80">No results found for this query.</p>
         )}
       </section>
     </>

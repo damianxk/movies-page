@@ -156,7 +156,7 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
             </button>
 
             <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded-full bg-black/45 px-3 py-1 text-xs text-slate-200">
-              Zdjęcie {activeIndex + 1} z {sortedImages.length}
+              Image {activeIndex + 1} of {sortedImages.length}
             </div>
 
             <button

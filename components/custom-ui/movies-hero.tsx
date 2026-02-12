@@ -75,7 +75,7 @@ const MoviesHero = ({ movies }: MoviesHeroProps) => {
     return (
       <section className="relative min-h-screen w-full overflow-hidden">
         <div className="relative z-10 flex min-h-screen items-center justify-center text-muted-foreground">
-          Ladowanie filmow...
+          Loading movies...
         </div>
       </section>
     )
