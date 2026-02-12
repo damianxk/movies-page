@@ -15,28 +15,18 @@ export function useMovieHero(movies: Movie[]) {
     useState<TransitionPhase>("entering");
   const [imageLoaded, setImageLoaded] = useState(false);
 
+  const resolvedActiveMovieId = useMemo(() => {
+    if (!movies.length) return null;
+    if (activeMovieId !== null && movies.some((movie) => movie.id === activeMovieId)) {
+      return activeMovieId;
+    }
+    return movies[0].id;
+  }, [movies, activeMovieId]);
+
   const activeMovie = useMemo(() => {
     if (!movies.length) return null;
-    return movies.find((movie) => movie.id === activeMovieId) ?? movies[0];
-  }, [movies, activeMovieId]);
-
-  useEffect(() => {
-    if (!movies.length) {
-      setActiveMovieId(null);
-      setNextMovieId(null);
-      setImageLoaded(false);
-      setTransitionPhase("idle");
-      return;
-    }
-
-    const hasActiveMovie = movies.some((movie) => movie.id === activeMovieId);
-    if (!hasActiveMovie) {
-      setActiveMovieId(movies[0].id);
-      setNextMovieId(null);
-      setImageLoaded(false);
-      setTransitionPhase("entering");
-    }
-  }, [movies, activeMovieId]);
+    return movies.find((movie) => movie.id === resolvedActiveMovieId) ?? movies[0];
+  }, [movies, resolvedActiveMovieId]);
 
   useEffect(() => {
     if (transitionPhase !== "exiting" || nextMovieId === null) return;
@@ -64,11 +54,11 @@ export function useMovieHero(movies: Movie[]) {
 
   const handleImageLoad = useCallback(
     (movieId: number) => {
-      if (movieId !== activeMovieId) return;
+      if (movieId !== resolvedActiveMovieId) return;
       setImageLoaded(true);
       setTransitionPhase("idle");
     },
-    [activeMovieId],
+    [resolvedActiveMovieId],
   );
 
   return {

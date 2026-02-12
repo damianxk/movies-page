@@ -5,7 +5,6 @@ import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Search01Icon, Cancel01Icon, Film01Icon } from "@hugeicons/core-free-icons" // Sprawdź czy masz te ikony
-import { cn } from "@/lib/utils"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
 import { Movie } from "@/types/movie"
 
@@ -110,7 +109,7 @@ export const SearchOverlay = ({
                             </div>
                         ) : (
                             <div className="p-12 text-center text-muted-foreground">
-                                <p>No results found for "{query}"</p>
+                                <p>No results found for &quot;{query}&quot;</p>
                             </div>
                         )}
                     </div>
