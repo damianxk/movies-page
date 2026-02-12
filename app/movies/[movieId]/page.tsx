@@ -50,6 +50,9 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
     notFound()
   }
 
+  const safeCast = Array.isArray(credits?.cast) ? credits.cast : []
+  const safeCrew = Array.isArray(credits?.crew) ? credits.crew : []
+
   const facts = [
     { label: "Adult", value: formatBoolean(movie.adult) },
     { label: "Video", value: formatBoolean(movie.video) },
@@ -66,7 +69,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
 
   return (
     <main className="relative min-h-svh w-full overflow-hidden bg-[#030711]">
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none fixed inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-35"
           style={{ backgroundImage: `url('${getMovieBackdropUrl(movie.backdrop_path)}')` }}
@@ -75,45 +78,54 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
         <div className="absolute inset-0 bg-linear-to-r from-[#030711]/70 via-transparent to-[#030711]/65" />
       </div>
 
-      <div className="relative z-10 flex min-h-svh w-full flex-col gap-5 px-4 pb-8 pt-24 sm:px-6 lg:px-12 lg:pb-10">
+      <div className="relative z-10 flex min-h-svh w-full flex-col gap-4 px-4 pb-6 pt-24 sm:px-6 lg:px-12 lg:pb-8">
         <section id="overview" className="scroll-mt-32">
           <MovieDetailsHero movie={movie} />
         </section>
 
         <MovieDetailsSectionNav />
 
-        <section id="cast" className="grid scroll-mt-32 gap-5 xl:grid-cols-[1.4fr_1fr]">
-          <MovieDetailsCast cast={credits.cast} />
-          <MovieDetailsFacts facts={facts} />
-        </section>
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)]">
+          <div className="space-y-4">
+            <section id="cast" className="scroll-mt-32">
+              <MovieDetailsCast cast={safeCast} />
+            </section>
 
-        <section id="crew" className="scroll-mt-32">
-          <MovieDetailsCrew crew={credits.crew} />
-        </section>
+            <section id="crew" className="scroll-mt-32">
+              <MovieDetailsCrew crew={safeCrew} />
+            </section>
 
-        <section id="media" className="scroll-mt-32">
-          <MovieDetailsMedia videos={videos} />
-        </section>
+            <section id="details" className="scroll-mt-32 space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <MovieDetailsBadges title="Genres" items={movie.genres.map((genre) => genre.name)} />
+                <MovieDetailsBadges
+                  title="Spoken languages"
+                  items={movie.spoken_languages.map((language) => language.english_name)}
+                />
+              </div>
 
-        <section id="recommendations" className="scroll-mt-32">
-          <MovieDetailsRecommendations movies={recommendations} />
-        </section>
+              <MovieDetailsBadges
+                title="Production countries"
+                items={movie.production_countries.map((country) => country.name)}
+              />
+              <MovieDetailsCompanies companies={movie.production_companies} />
+              <MovieDetailsJson movie={movie} />
+            </section>
+          </div>
 
-        <section id="details" className="grid scroll-mt-32 gap-5 lg:grid-cols-2">
-          <MovieDetailsBadges title="Genres" items={movie.genres.map((genre) => genre.name)} />
-          <MovieDetailsBadges
-            title="Spoken languages"
-            items={movie.spoken_languages.map((language) => language.english_name)}
-          />
-          <MovieDetailsBadges
-            title="Production countries"
-            items={movie.production_countries.map((country) => country.name)}
-          />
-          <MovieDetailsIdentifiers movie={movie} />
-        </section>
+          <aside className="space-y-4 xl:pt-1">
+            <section id="media" className="scroll-mt-32">
+              <MovieDetailsMedia videos={videos} />
+            </section>
 
-        <MovieDetailsCompanies companies={movie.production_companies} />
-        <MovieDetailsJson movie={movie} />
+            <section id="recommendations" className="scroll-mt-32">
+              <MovieDetailsRecommendations movies={recommendations} />
+            </section>
+
+            <MovieDetailsFacts facts={facts} />
+            <MovieDetailsIdentifiers movie={movie} />
+          </aside>
+        </div>
       </div>
     </main>
   )

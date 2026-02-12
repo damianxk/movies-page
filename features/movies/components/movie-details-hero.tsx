@@ -16,7 +16,7 @@ export function MovieDetailsHero({ movie }: MovieDetailsHeroProps) {
   return (
     <section className="relative">
       <div className="grid items-end gap-5 md:grid-cols-[220px_1fr] lg:gap-8">
-        <div className="relative mx-auto h-[320px] w-[220px] overflow-hidden rounded-xl border border-white/15 shadow-2xl md:mx-0">
+        <div className="relative mx-auto h-[320px] w-[220px] overflow-hidden rounded-xl shadow-2xl md:mx-0">
           <Image
             src={getMoviePosterUrl(movie.poster_path, "w500")}
             alt={movie.title}
@@ -56,7 +56,7 @@ export function MovieDetailsHero({ movie }: MovieDetailsHeroProps) {
             {movie.genres.slice(0, 3).map((genre) => (
               <span
                 key={genre.id}
-                className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-1 text-cyan-200"
+                className="rounded-full bg-white/10 px-2.5 py-1 text-slate-100"
               >
                 {genre.name}
               </span>

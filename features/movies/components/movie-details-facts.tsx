@@ -9,12 +9,12 @@ type MovieDetailsFactsProps = {
 
 export function MovieDetailsFacts({ facts }: MovieDetailsFactsProps) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-[#0b1223]/75 p-5 backdrop-blur-md sm:p-6">
+    <section className="py-2">
       <h2 className="text-xl font-semibold text-white">Movie data</h2>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">
         {facts.map((fact) => (
-          <div key={fact.label} className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <p className="text-xs uppercase tracking-wider text-slate-300/75">
+          <div key={fact.label} className="pb-2">
+            <p className="text-[11px] uppercase tracking-wider text-slate-400/80">
               {fact.label}
             </p>
             <p className="mt-2 text-sm font-medium text-white">{fact.value}</p>

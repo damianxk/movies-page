@@ -1,45 +1,70 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { type Movie } from "@/types/movie"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 type MovieDetailsRecommendationsProps = {
   movies: Movie[]
 }
 
 export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendationsProps) {
-  const visibleMovies = movies.slice(0, 12)
+  const safeMovies = Array.isArray(movies) ? movies : []
+  const visibleMovies = safeMovies.slice(0, 16)
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-[#0b1223]/75 p-5 backdrop-blur-md sm:p-6">
-      <h2 className="text-xl font-semibold text-white">More like this</h2>
+    <section className="py-1">
+      <h2 className="text-lg font-semibold text-white">More like this</h2>
 
       {visibleMovies.length ? (
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-          {visibleMovies.map((movie) => (
-            <Link
-              key={movie.id}
-              href={`/movies/${movie.id}`}
-              className="group overflow-hidden rounded-xl border border-white/10 bg-white/5"
-            >
-              <div className="relative aspect-2/3 w-full overflow-hidden">
-                <Image
-                  src={getMoviePosterUrl(movie.poster_path, "w500")}
-                  alt={movie.title}
-                  fill
-                  sizes="(max-width: 1024px) 33vw, 16vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <div className="p-2">
-                <p className="truncate text-xs font-medium text-white">{movie.title}</p>
-                <p className="mt-1 text-[10px] text-slate-300/80">
-                  {movie.release_date?.split("-")[0] || "Unknown year"}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+            containScroll: "trimSnaps",
+          }}
+          className="mt-2 pr-7"
+        >
+          <CarouselContent className="-ml-2">
+            {visibleMovies.map((movie) => (
+              <CarouselItem
+                key={movie.id}
+                className="pl-2 basis-[34%] sm:basis-[24%] lg:basis-[19%] xl:basis-[16%]"
+              >
+                <Link
+                  href={`/movies/${movie.id}`}
+                  className="group block overflow-hidden rounded-lg bg-black/25"
+                >
+                  <div className="relative aspect-2/3 w-full overflow-hidden">
+                    <Image
+                      src={getMoviePosterUrl(movie.poster_path, "w500")}
+                      alt={movie.title}
+                      fill
+                      sizes="(max-width: 1280px) 30vw, 20vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="p-1.5">
+                    <p className="truncate text-[10px] font-medium text-white">{movie.title}</p>
+                    <p className="mt-1 text-[10px] text-slate-300/80">
+                      {movie.release_date?.split("-")[0] || "Unknown"}
+                    </p>
+                  </div>
+                </Link>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="-left-2 top-[40%] border-0 bg-black/45 text-white hover:bg-black/65" />
+          <CarouselNext className="right-0 top-[40%] border-0 bg-black/45 text-white hover:bg-black/65" />
+        </Carousel>
       ) : (
         <p className="mt-4 text-sm text-slate-300/80">No recommendations available.</p>
       )}

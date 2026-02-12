@@ -18,23 +18,24 @@ function getYoutubeEmbedUrl(key: string) {
 }
 
 export function MovieDetailsMedia({ videos }: MovieDetailsMediaProps) {
-  const trailers = videos.filter(isTrailer)
+  const safeVideos = Array.isArray(videos) ? videos : []
+  const trailers = safeVideos.filter(isTrailer)
   const featuredTrailer = trailers[0]
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-[#0b1223]/75 p-5 backdrop-blur-md sm:p-6">
-      <h2 className="text-xl font-semibold text-white">Media</h2>
+    <section className="py-1">
+      <h2 className="text-lg font-semibold text-white">Trailer</h2>
 
       {featuredTrailer ? (
-        <div className="mt-4 space-y-4">
-          <div className="overflow-hidden rounded-xl border border-white/10 bg-black/40">
+        <div className="mt-2.5 space-y-2.5">
+          <div className="overflow-hidden rounded-xl bg-black/40 shadow-xl shadow-black/30">
             <iframe
               src={getYoutubeEmbedUrl(featuredTrailer.key)}
               title={featuredTrailer.name}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
-              className="aspect-video w-full"
+              className="h-[165px] w-full md:h-[190px]"
             />
           </div>
 
@@ -46,7 +47,7 @@ export function MovieDetailsMedia({ videos }: MovieDetailsMediaProps) {
                   href={getYoutubeUrl(trailer.key)}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-200 hover:bg-cyan-500/20"
+                  className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-100 hover:bg-white/20"
                 >
                   {trailer.name}
                 </Link>
