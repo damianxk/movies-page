@@ -3,7 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ['image.tmdb.org'],
+    remotePatterns: [{ hostname: 'image.tmdb.org' }],
+    qualities: [100, 25, 50, 70, 75, 95]
   },
 };
 
