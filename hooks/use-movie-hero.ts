@@ -28,6 +28,8 @@ export function useMovieHero(movies: Movie[]) {
   const resolvedActiveMovieId = hasActiveMovie
     ? activeMovieId
     : (movies[0]?.id ?? null);
+  const resolvedPendingMovieId =
+    pendingMovieId !== null && hasPendingMovie ? pendingMovieId : null;
 
   const activeMovie = useMemo(() => {
     if (!movies.length) return null;
@@ -35,45 +37,23 @@ export function useMovieHero(movies: Movie[]) {
   }, [movies, resolvedActiveMovieId]);
 
   useEffect(() => {
-    if (!movies.length) {
-      setActiveMovieId(null);
-      setPendingMovieId(null);
-      setImageLoaded(false);
-      setTransitionPhase("idle");
-      return;
-    }
-
-    if (!hasActiveMovie) {
-      setActiveMovieId(movies[0].id);
-      setPendingMovieId(null);
-      setImageLoaded(false);
-      setTransitionPhase("entering");
-      return;
-    }
-
-    if (pendingMovieId !== null && !hasPendingMovie) {
-      setPendingMovieId(null);
-    }
-  }, [movies, hasActiveMovie, hasPendingMovie, pendingMovieId]);
-
-  useEffect(() => {
-    if (transitionPhase !== "exiting" || pendingMovieId === null) return;
+    if (transitionPhase !== "exiting" || resolvedPendingMovieId === null) return;
 
     const timeoutId = window.setTimeout(() => {
-      setActiveMovieId(pendingMovieId);
+      setActiveMovieId(resolvedPendingMovieId);
       setPendingMovieId(null);
       setImageLoaded(false);
       setTransitionPhase("entering");
     }, EXIT_TRANSITION_MS);
 
     return () => window.clearTimeout(timeoutId);
-  }, [transitionPhase, pendingMovieId]);
+  }, [transitionPhase, resolvedPendingMovieId]);
 
   const handleSelectMovie = useCallback(
     (movie: Movie) => {
       if (
-        movie.id === pendingMovieId ||
-        (pendingMovieId === null && movie.id === activeMovie?.id)
+        movie.id === resolvedPendingMovieId ||
+        (resolvedPendingMovieId === null && movie.id === activeMovie?.id)
       ) {
         return;
       }
@@ -81,7 +61,7 @@ export function useMovieHero(movies: Movie[]) {
       setPendingMovieId(movie.id);
       setTransitionPhase("exiting");
     },
-    [activeMovie?.id, pendingMovieId],
+    [activeMovie?.id, resolvedPendingMovieId],
   );
 
   const handleImageLoad = useCallback(
@@ -94,7 +74,7 @@ export function useMovieHero(movies: Movie[]) {
     [resolvedActiveMovieId, transitionPhase],
   );
 
-  const selectedMovieId = pendingMovieId ?? resolvedActiveMovieId;
+  const selectedMovieId = resolvedPendingMovieId ?? resolvedActiveMovieId;
 
   return {
     activeMovie,

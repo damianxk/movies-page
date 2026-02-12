@@ -1,6 +1,7 @@
 // @/components/custom-ui/hero-content.tsx
 import { HugeiconsIcon } from "@hugeicons/react"
 import { HelpCircleIcon, UserIcon } from "@hugeicons/core-free-icons"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { StarRating } from "./star-rating"
 import { calculateStarRating, getReleaseYear } from "@/lib/movie-utils"
@@ -45,9 +46,11 @@ export const HeroContent = ({ movie, isVisible }: HeroContentProps) => {
             <StarRating rating={stars} displayValue={movie.vote_average} />
 
             <div className="mb-4 md:mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-                <Button size="lg" className="gap-2 w-full sm:w-auto shadow-lg">
-                    <HugeiconsIcon icon={HelpCircleIcon} strokeWidth={2} className="h-4 w-4" />
-                    <span>See Details</span>
+                <Button asChild size="lg" className="gap-2 w-full sm:w-auto shadow-lg">
+                    <Link href={`/movies/${movie.id}`}>
+                        <HugeiconsIcon icon={HelpCircleIcon} strokeWidth={2} className="h-4 w-4" />
+                        <span>See Details</span>
+                    </Link>
                 </Button>
                 <Button variant="secondary" size="lg" className="gap-2 w-full sm:w-auto shadow-md">
                     <HugeiconsIcon icon={UserIcon} strokeWidth={2} className="h-4 w-4" />
