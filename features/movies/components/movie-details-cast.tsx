@@ -1,16 +1,17 @@
 import Image from "next/image"
+import Link from "next/link"
 import { type CastMember } from "@/features/movies/types/movie-credits"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
 
 type MovieDetailsCastProps = {
+  movieId: number
   cast: CastMember[]
 }
 
-export function MovieDetailsCast({ cast }: MovieDetailsCastProps) {
+export function MovieDetailsCast({ movieId, cast }: MovieDetailsCastProps) {
   const safeCast = Array.isArray(cast) ? cast : []
   const sortedCast = [...safeCast].sort((a, b) => a.order - b.order)
   const topBilledCast = sortedCast.slice(0, 10)
-  const fullCast = sortedCast.slice(0, 30)
 
   return (
     <section className="py-2">
@@ -42,24 +43,14 @@ export function MovieDetailsCast({ cast }: MovieDetailsCastProps) {
         <p className="mt-4 text-sm text-slate-300/80">No cast data available.</p>
       )}
 
-      {fullCast.length > 0 && (
-        <details className="mt-4">
-          <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wide text-slate-300 hover:text-white">
-            Full cast list
-          </summary>
-          <div className="mt-2 max-h-72 divide-y divide-white/10 overflow-y-auto pr-1">
-            {fullCast.map((member) => (
-              <div
-                key={`full-${member.id}-${member.order}`}
-                className="grid grid-cols-[1fr_1fr] gap-2 py-2 text-xs"
-              >
-                <span className="text-white">{member.name}</span>
-                <span className="text-slate-300/80">{member.character || "Unknown role"}</span>
-              </div>
-            ))}
-          </div>
-        </details>
-      )}
+      <div className="mt-4">
+        <Link
+          href={`/movies/${movieId}/credits`}
+          className="text-xs font-semibold uppercase tracking-wide text-slate-300 transition-colors hover:text-white"
+        >
+          Full cast list
+        </Link>
+      </div>
     </section>
   )
 }

@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useMemo, useState } from "react"
+import { createPortal } from "react-dom"
 import { type MovieBackdropImage } from "@/features/movies/types/movie-images"
 import { getMovieBackdropUrl } from "@/lib/movie-utils"
 
@@ -11,6 +12,8 @@ type MovieDetailsImagesProps = {
 
 export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
+  const [isImageLoading, setIsImageLoading] = useState(false)
 
   const safeImages = Array.isArray(images) ? images : []
   const sortedImages = useMemo(
@@ -24,21 +27,44 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
   const remainingCount = Math.max(0, sortedImages.length - visibleImages.length)
 
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (activeIndex === null) {
+      setIsImageLoading(false)
+      return
+    }
+    setIsImageLoading(true)
+  }, [activeIndex])
+
+  const openImageAtIndex = (index: number) => {
+    setIsImageLoading(true)
+    setActiveIndex(index)
+  }
+
+  const navigateImage = (direction: "prev" | "next") => {
+    if (sortedImages.length === 0) return
+    setIsImageLoading(true)
+    setActiveIndex((prev) => {
+      if (prev === null) return null
+      if (direction === "prev") {
+        return (prev - 1 + sortedImages.length) % sortedImages.length
+      }
+      return (prev + 1) % sortedImages.length
+    })
+  }
+
+  useEffect(() => {
     if (activeIndex === null) return
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setActiveIndex(null)
       if (event.key === "ArrowRight") {
-        setActiveIndex((prev) => {
-          if (prev === null || sortedImages.length === 0) return prev
-          return (prev + 1) % sortedImages.length
-        })
+        navigateImage("next")
       }
       if (event.key === "ArrowLeft") {
-        setActiveIndex((prev) => {
-          if (prev === null || sortedImages.length === 0) return prev
-          return (prev - 1 + sortedImages.length) % sortedImages.length
-        })
+        navigateImage("prev")
       }
     }
 
@@ -69,7 +95,7 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
               <button
                 type="button"
                 key={`top-${image.file_path}`}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => openImageAtIndex(index)}
                 className="group relative h-[120px] overflow-hidden rounded-xl bg-black/40 sm:h-[140px]"
               >
                 <Image
@@ -92,7 +118,7 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
                 <button
                   type="button"
                   key={`bottom-${image.file_path}`}
-                  onClick={() => setActiveIndex(absoluteIndex)}
+                  onClick={() => openImageAtIndex(absoluteIndex)}
                   className="group relative h-[82px] overflow-hidden rounded-lg bg-black/40 sm:h-[90px]"
                 >
                   <Image
@@ -116,62 +142,65 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
         <p className="mt-4 text-sm text-slate-300/80">No images available for this movie.</p>
       )}
 
-      {activeImage && activeIndex !== null && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black/90"
-          style={{ zIndex: 1000 }}
-        >
-          <button
-            type="button"
-            onClick={() => setActiveIndex(null)}
-            className="absolute left-4 top-4 rounded-full bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20"
+      {isMounted &&
+        activeImage &&
+        activeIndex !== null &&
+        createPortal(
+          <div
+            className="fixed inset-0 flex items-center justify-center bg-black/90"
+            style={{ zIndex: 2147483647 }}
           >
-            Close
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveIndex(null)}
+              className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20"
+            >
+              Close
+            </button>
 
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded-full bg-black/45 px-3 py-1 text-xs text-slate-200">
-            Zdjęcie {activeIndex + 1} z {sortedImages.length}
-          </div>
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded-full bg-black/45 px-3 py-1 text-xs text-slate-200">
+              Zdjęcie {activeIndex + 1} z {sortedImages.length}
+            </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              setActiveIndex((prev) =>
-                prev === null ? null : (prev - 1 + sortedImages.length) % sortedImages.length,
-              )
-            }
-            className="absolute left-3 rounded bg-black/45 px-2 py-3 text-sm text-white hover:bg-black/70"
-          >
-            {"<"}
-          </button>
+            <button
+              type="button"
+              onClick={() => navigateImage("prev")}
+              className="absolute left-3 rounded bg-black/45 px-2 py-3 text-sm text-white hover:bg-black/70"
+            >
+              {"<"}
+            </button>
 
-          <div className="relative h-[70vh] w-[92vw] max-w-6xl overflow-hidden rounded-lg">
-            <Image
-              src={getMovieBackdropUrl(activeImage.file_path)}
-              alt={`Movie fullscreen image ${activeIndex + 1}`}
-              fill
-              sizes="90vw"
-              className="object-contain"
-            />
-          </div>
+            <div className="relative h-[70vh] w-[92vw] max-w-6xl overflow-hidden rounded-lg">
+              {isImageLoading && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/45">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+                </div>
+              )}
+              <Image
+                key={activeImage.file_path}
+                src={getMovieBackdropUrl(activeImage.file_path)}
+                alt={`Movie fullscreen image ${activeIndex + 1}`}
+                fill
+                sizes="90vw"
+                className="object-contain"
+                onLoad={() => setIsImageLoading(false)}
+              />
+            </div>
 
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/45 px-3 py-1 text-xs text-slate-200">
-            {activeIndex + 1} / {sortedImages.length}
-          </div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/45 px-3 py-1 text-xs text-slate-200">
+              {activeIndex + 1} / {sortedImages.length}
+            </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              setActiveIndex((prev) =>
-                prev === null ? null : (prev + 1) % sortedImages.length,
-              )
-            }
-            className="absolute right-3 rounded bg-black/45 px-2 py-3 text-sm text-white hover:bg-black/70"
-          >
-            {">"}
-          </button>
-        </div>
-      )}
+            <button
+              type="button"
+              onClick={() => navigateImage("next")}
+              className="absolute right-3 rounded bg-black/45 px-2 py-3 text-sm text-white hover:bg-black/70"
+            >
+              {">"}
+            </button>
+          </div>,
+          document.body,
+        )}
     </section>
   )
 }

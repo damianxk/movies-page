@@ -91,7 +91,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)]">
           <div className="space-y-4">
             <section id="cast" className="scroll-mt-32">
-              <MovieDetailsCast cast={safeCast} />
+              <MovieDetailsCast movieId={movie.id} cast={safeCast} />
             </section>
 
             <section id="crew" className="scroll-mt-32">
