@@ -36,7 +36,7 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
             {/* 1. HEADER */}
             <SheetHeader className="px-6 py-8 border-b border-white/5 text-left">
                 <SheetTitle className="text-2xl font-black tracking-tighter uppercase text-white flex items-center gap-2">
-                    <span className="text-primary">///</span> Moviestan
+                    <span className="text-primary">///</span> Movie page
                 </SheetTitle>
             </SheetHeader>
 
@@ -93,7 +93,7 @@ export const MobileMenu = ({ links }: MobileMenuProps) => {
 
                     {/* Copyright */}
                     <div className="text-[10px] text-white/20 text-center mt-2">
-                        © 2024 Moviestan. All rights reserved.
+                        © 2026 Movie page. All rights reserved.
                     </div>
                 </div>
             </div>

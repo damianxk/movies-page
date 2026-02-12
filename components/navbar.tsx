@@ -49,7 +49,7 @@ export const Navbar = ({ searchData, onSelectMovie }: NavbarProps) => {
                             M
                         </div>
                         <span className="text-xl font-bold tracking-tight text-foreground/90 group-hover:text-foreground transition-colors uppercase">
-                            Moviestan
+                            Movie page
                         </span>
                     </Link>
 
