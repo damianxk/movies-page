@@ -15,7 +15,7 @@ const MoviesHero = ({ movies }: MoviesHeroProps) => {
         activeMovie,
         isTransitioning,
         imageLoaded,
-        setImageLoaded,
+        handleImageLoad,
         handleSelectMovie
     } = useMovieHero(movies)
 
@@ -34,8 +34,8 @@ const MoviesHero = ({ movies }: MoviesHeroProps) => {
             {/* Background Layer */}
             <HeroBackground
                 movie={activeMovie}
-                isVisible={!isTransitioning && imageLoaded} // Ukrywamy stary obrazek dopiero jak nowy się wczyta lub podczas tranzycji
-                onImageLoad={() => setImageLoaded(true)}
+                isVisible={imageLoaded && !isTransitioning}
+                onImageLoad={handleImageLoad}
             />
 
             {/* Content Layer */}

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 type HeroBackgroundProps = {
     movie: Movie | null
     isVisible: boolean
-    onImageLoad: () => void
+    onImageLoad: (movieId: number) => void
 }
 
 export const HeroBackground = ({ movie, isVisible, onImageLoad }: HeroBackgroundProps) => {
@@ -21,12 +21,13 @@ export const HeroBackground = ({ movie, isVisible, onImageLoad }: HeroBackground
         <>
             <div
                 className={cn(
-                    "absolute inset-0 transition-opacity duration-700",
+                    "absolute inset-0 transition-opacity",
                     isVisible ? "opacity-100" : "opacity-0"
                 )}
             >
                 <div className="absolute inset-0 md:hidden">
                     <Image
+                        key={`${movie.id}-mobile`}
                         src={mobileUrl}
                         alt={movie.title}
                         fill
@@ -34,11 +35,12 @@ export const HeroBackground = ({ movie, isVisible, onImageLoad }: HeroBackground
                         quality={100}
                         priority
                         className="object-cover object-top"
-                        onLoad={onImageLoad}
+                        onLoad={() => onImageLoad(movie.id)}
                     />
                 </div>
                 <div className="absolute inset-0 hidden md:block">
                     <Image
+                        key={`${movie.id}-desktop`}
                         src={backdropUrl}
                         alt={movie.title}
                         fill
@@ -46,7 +48,7 @@ export const HeroBackground = ({ movie, isVisible, onImageLoad }: HeroBackground
                         quality={95}
                         priority
                         className="object-cover object-[35%_center] md:object-center"
-                        onLoad={onImageLoad}
+                        onLoad={() => onImageLoad(movie.id)}
                     />
                 </div>
             </div>

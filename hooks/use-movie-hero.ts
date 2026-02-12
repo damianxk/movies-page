@@ -21,15 +21,18 @@ export function useMovieHero(movies: Movie[]) {
 
       setIsTransitioning(true);
       setImageLoaded(false);
-
-      const timeoutId = window.setTimeout(() => {
-        setActiveMovieId(movie.id);
-        setIsTransitioning(false);
-      }, 300);
-
-      return () => window.clearTimeout(timeoutId);
+      setActiveMovieId(movie.id);
     },
     [activeMovie?.id],
+  );
+
+  const handleImageLoad = useCallback(
+    (movieId: number) => {
+      if (movieId !== activeMovieId) return;
+      setImageLoaded(true);
+      setIsTransitioning(false);
+    },
+    [activeMovieId],
   );
 
   return {
@@ -37,6 +40,7 @@ export function useMovieHero(movies: Movie[]) {
     isTransitioning,
     imageLoaded,
     setImageLoaded,
+    handleImageLoad,
     handleSelectMovie,
   };
 }
