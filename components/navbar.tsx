@@ -52,11 +52,12 @@ export const Navbar = () => {
                         return
                     }
 
-                    const externalUrl =
-                        item.mediaType === "tv"
-                            ? `https://www.themoviedb.org/tv/${item.id}`
-                            : `https://www.themoviedb.org/person/${item.id}`
-                    window.open(externalUrl, "_blank", "noopener,noreferrer")
+                    if (item.mediaType === "tv") {
+                        router.push(`/series/${item.id}`)
+                        return
+                    }
+
+                    router.push(`/people/${item.id}`)
                 }}
             />
         </>

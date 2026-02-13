@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { useMemo, useState } from "react"
 import { type CastMember, type CrewMember } from "@/features/movies/types/movie-credits"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
@@ -68,9 +69,12 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
                   </div>
 
                   <div className="min-w-0 flex-1 sm:contents">
-                    <p className="truncate text-sm font-semibold text-white sm:font-medium">
+                    <Link
+                      href={`/people/${member.id}`}
+                      className="truncate text-sm font-semibold text-white transition-colors hover:text-primary sm:font-medium"
+                    >
                       {member.name}
-                    </p>
+                    </Link>
                     <p className="mt-0.5 line-clamp-2 text-xs text-slate-300/90 sm:mt-0 sm:text-sm">
                       {member.character || "Unknown role"}
                     </p>
@@ -97,7 +101,12 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
                 <p className="text-xs uppercase tracking-wide text-slate-400">
                   {member.department}
                 </p>
-                <p className="mt-1 text-sm font-medium text-white">{member.name}</p>
+                <Link
+                  href={`/people/${member.id}`}
+                  className="mt-1 block text-sm font-medium text-white transition-colors hover:text-primary"
+                >
+                  {member.name}
+                </Link>
                 <p className="text-sm text-slate-300/85">{member.job}</p>
               </article>
             ))}
