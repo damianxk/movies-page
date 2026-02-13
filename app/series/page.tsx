@@ -86,9 +86,7 @@ function SeriesSection({
           {series.map((item) => (
             <Link
               key={`${item.id}-${title}`}
-              href={`https://www.themoviedb.org/tv/${item.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`/series/${item.id}`}
               className="group overflow-hidden rounded-xl border border-border/50 bg-card/40 transition-colors hover:border-primary/60"
             >
               <div className="relative aspect-2/3 w-full">
