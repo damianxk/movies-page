@@ -22,9 +22,9 @@ export function MovieDetailsCast({ movieId, cast }: MovieDetailsCastProps) {
       />
 
       {topBilledCast.length ? (
-        <div className="mt-3 flex flex-wrap gap-3 overflow-x-auto pb-2">
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
           {topBilledCast.map((member) => (
-            <article key={member.id} className="group w-[112px] shrink-0">
+            <article key={member.id} className="group min-w-0">
               <div className="mx-auto relative h-14 w-14 overflow-hidden rounded-full bg-white/10">
                 <Image
                   src={getMoviePosterUrl(member.profile_path, "w500")}
@@ -34,7 +34,7 @@ export function MovieDetailsCast({ movieId, cast }: MovieDetailsCastProps) {
                   className="object-cover"
                 />
               </div>
-              <p className="mt-3 text-center text-sm font-semibold text-white transition-colors group-hover:text-primary">
+              <p className="mt-3 line-clamp-2 text-center text-sm font-semibold text-white transition-colors group-hover:text-primary">
                 {member.name}
               </p>
               <p className="mt-1 line-clamp-2 text-center text-[11px] text-slate-300/80">

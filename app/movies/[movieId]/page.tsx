@@ -83,15 +83,15 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
         <div className="absolute inset-0 bg-linear-to-r from-[#030711]/70 via-transparent to-[#030711]/65" />
       </div>
 
-      <div className="relative z-10 flex min-h-svh w-full flex-col gap-4 overflow-x-clip px-4 pb-6 pt-24 sm:px-6 lg:px-12 lg:pb-8">
+      <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-[1640px] flex-col gap-4 overflow-x-clip px-4 pb-6 pt-24 sm:px-6 lg:px-10 lg:pb-8 xl:px-12">
         <section id="overview" className="scroll-mt-32">
           <MovieDetailsHero movie={movie} />
         </section>
 
         {/* <MovieDetailsSectionNav /> */}
 
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)]">
-          <div className="min-w-0 space-y-4">
+        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.9fr)] xl:grid-cols-[minmax(0,1.4fr)_minmax(340px,0.88fr)]">
+          <div className="min-w-0 space-y-5">
             <section id="cast" className="scroll-mt-32">
               <MovieDetailsCast movieId={movie.id} cast={safeCast} />
             </section>
@@ -100,7 +100,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
               <MovieDetailsCrew crew={safeCrew} />
             </section>
 
-            <section id="details" className="scroll-mt-32 space-y-4">
+            <section id="details" className="scroll-mt-32 space-y-5">
               <div className="grid gap-4 md:grid-cols-2">
                 <MovieDetailsBadges title="Genres" items={movie.genres.map((genre) => genre.name)} />
                 <MovieDetailsBadges
@@ -123,7 +123,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
             </section>
           </div>
 
-          <aside className="min-w-0 space-y-4 xl:pt-1">
+          <aside className="min-w-0 space-y-5 lg:sticky lg:top-24 lg:self-start">
             <section id="media" className="scroll-mt-32">
               <MovieDetailsMedia videos={videos} />
             </section>
