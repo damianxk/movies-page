@@ -1,7 +1,7 @@
 // @/components/custom-ui/movies-carousel.tsx
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import MovieCard from "./movie-card"
 import { Movie } from "@/types/movie"
 import { useCarouselAutoScroll } from "@/hooks/use-carousel-scroll"
@@ -14,6 +14,8 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import { cn } from "@/lib/utils"
+
+const MOVIES_CAROUSEL_SNAP_STORAGE_KEY = "movies-hero-carousel-snap"
 
 type MoviesCarouselProps = {
     movies: Movie[]
@@ -44,7 +46,42 @@ const MoviesCarousel = ({
         return movies.findIndex((m) => m.id === selectedMovieId)
     }, [movies, selectedMovieId])
 
+    const [initialStartIndex] = useState(() => {
+        if (typeof window === "undefined") {
+            return selectedIndex >= 0 ? selectedIndex : 0
+        }
+
+        const storedSnap = window.sessionStorage.getItem(MOVIES_CAROUSEL_SNAP_STORAGE_KEY)
+        const parsedSnap = Number(storedSnap)
+        const maxSnapIndex = Math.max(movies.length - 1, 0)
+
+        if (Number.isFinite(parsedSnap) && parsedSnap >= 0) {
+            return Math.min(parsedSnap, maxSnapIndex)
+        }
+
+        return selectedIndex >= 0 ? selectedIndex : 0
+    })
+
     useCarouselAutoScroll(api, selectedIndex)
+
+    useEffect(() => {
+        if (!api || typeof window === "undefined") return
+
+        const persistCurrentSnap = () => {
+            window.sessionStorage.setItem(
+                MOVIES_CAROUSEL_SNAP_STORAGE_KEY,
+                String(api.selectedScrollSnap())
+            )
+        }
+
+        persistCurrentSnap()
+        api.on("select", persistCurrentSnap)
+        api.on("reInit", persistCurrentSnap)
+        return () => {
+            api.off("select", persistCurrentSnap)
+            api.off("reInit", persistCurrentSnap)
+        }
+    }, [api])
 
     if (!movies.length) return null
 
@@ -63,7 +100,10 @@ const MoviesCarousel = ({
 
             <Carousel
                 setApi={setApi}
-                opts={carouselOpts}
+                opts={{
+                    ...carouselOpts,
+                    startIndex: initialStartIndex,
+                }}
                 className={cn(
                     "w-full max-w-full overflow-hidden",
                     compact ? "py-4" : "py-6"
