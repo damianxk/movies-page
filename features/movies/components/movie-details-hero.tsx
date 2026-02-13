@@ -12,6 +12,11 @@ type MovieDetailsHeroProps = {
 
 export function MovieDetailsHero({ movie }: MovieDetailsHeroProps) {
   const stars = Math.round(calculateStarRating(movie.vote_average))
+  const spokenLanguages = Array.from(
+    new Set(movie.spoken_languages.map((language) => language.english_name).filter(Boolean)),
+  )
+  const visibleSpokenLanguages = spokenLanguages.slice(0, 2)
+  const hiddenLanguagesCount = Math.max(0, spokenLanguages.length - visibleSpokenLanguages.length)
 
   return (
     <section className="relative">
@@ -61,6 +66,19 @@ export function MovieDetailsHero({ movie }: MovieDetailsHeroProps) {
                 {genre.name}
               </span>
             ))}
+            {visibleSpokenLanguages.map((language) => (
+              <span
+                key={language}
+                className="rounded-full bg-primary/15 px-2.5 py-1 text-primary"
+              >
+                Lang: {language}
+              </span>
+            ))}
+            {hiddenLanguagesCount > 0 && (
+              <span className="rounded-full bg-primary/15 px-2.5 py-1 text-primary">
+                +{hiddenLanguagesCount} lang
+              </span>
+            )}
           </div>
 
           <div className="mt-3 flex flex-wrap gap-4 text-xs text-slate-300">

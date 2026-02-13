@@ -14,7 +14,6 @@ import {
 } from "@/features/movies/lib/movie-details-formatters"
 import { MovieDetailsHero } from "@/features/movies/components/movie-details-hero"
 import { MovieDetailsFacts } from "@/features/movies/components/movie-details-facts"
-import { MovieDetailsBadges } from "@/features/movies/components/movie-details-badges"
 import { MovieDetailsCompanies } from "@/features/movies/components/movie-details-companies"
 import { MovieDetailsIdentifiers } from "@/features/movies/components/movie-details-identifiers"
 import { MovieDetailsJson } from "@/features/movies/components/movie-details-json"
@@ -101,18 +100,6 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
             </section>
 
             <section id="details" className="scroll-mt-32 space-y-5">
-              <div className="grid gap-4 md:grid-cols-2">
-                <MovieDetailsBadges title="Genres" items={movie.genres.map((genre) => genre.name)} />
-                <MovieDetailsBadges
-                  title="Spoken languages"
-                  items={movie.spoken_languages.map((language) => language.english_name)}
-                />
-              </div>
-
-              <MovieDetailsBadges
-                title="Production countries"
-                items={movie.production_countries.map((country) => country.name)}
-              />
               <MovieDetailsCompanies companies={movie.production_companies} />
               <MovieDetailsReviews
                 movieId={movie.id}
