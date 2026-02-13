@@ -32,7 +32,7 @@ export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendati
             loop: false,
             containScroll: "trimSnaps",
           }}
-          className="mt-2 overflow-hidden pr-7"
+          className="mt-2 overflow-hidden px-7"
         >
           <CarouselContent className="-ml-2">
             {visibleMovies.map((movie) => (
