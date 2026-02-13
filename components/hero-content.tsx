@@ -52,9 +52,11 @@ export const HeroContent = ({ movie, isVisible }: HeroContentProps) => {
                         <span>See Details</span>
                     </Link>
                 </Button>
-                <Button variant="secondary" size="lg" className="gap-2 w-full sm:w-auto shadow-md">
-                    <HugeiconsIcon icon={UserIcon} strokeWidth={2} className="h-4 w-4" />
-                    <span>See Cast</span>
+                <Button asChild variant="secondary" size="lg" className="gap-2 w-full sm:w-auto shadow-md">
+                    <Link href={`/movies/${movie.id}/credits`}>
+                        <HugeiconsIcon icon={UserIcon} strokeWidth={2} className="h-4 w-4" />
+                        <span>See Cast</span>
+                    </Link>
                 </Button>
             </div>
 
