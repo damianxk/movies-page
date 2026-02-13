@@ -33,6 +33,13 @@ export type MovieListResult = {
   movies: Movie[]
 }
 
+type MovieListsBundle = {
+  nowPlaying: MovieListResult
+  popular: MovieListResult
+  topRated: MovieListResult
+  upcoming: MovieListResult
+}
+
 function getTmdbToken() {
   return process.env.TMDB_API_KEY
 }
@@ -103,6 +110,72 @@ export async function getMovieLists(page = 1) {
     getMovieList("popular", page),
     getMovieList("top_rated", page),
     getMovieList("upcoming", page),
+  ])
+
+  return {
+    nowPlaying,
+    popular,
+    topRated,
+    upcoming,
+  }
+}
+
+function appendUniqueMovies(current: Movie[], incoming: Movie[]) {
+  const merged = [...current]
+  const seen = new Set(current.map((movie) => movie.id))
+
+  for (const movie of incoming) {
+    if (seen.has(movie.id)) continue
+    merged.push(movie)
+    seen.add(movie.id)
+  }
+
+  return merged
+}
+
+export async function getMovieListUpToPage(
+  category: MovieListCategory,
+  requestedPage = 1,
+): Promise<MovieListResult> {
+  const firstPage = await getMovieList(category, 1)
+  if (firstPage.totalPages <= 1) {
+    return firstPage
+  }
+
+  const targetPage = Math.min(toSafePage(requestedPage), firstPage.totalPages)
+  if (targetPage <= 1) {
+    return firstPage
+  }
+
+  const restPages = await Promise.all(
+    Array.from({ length: targetPage - 1 }, (_, index) => getMovieList(category, index + 2)),
+  )
+
+  const movies = restPages.reduce(
+    (accumulator, pageResult) => appendUniqueMovies(accumulator, pageResult.movies),
+    firstPage.movies,
+  )
+
+  return {
+    page: targetPage,
+    totalPages: firstPage.totalPages,
+    totalResults: firstPage.totalResults,
+    dates: firstPage.dates,
+    movies,
+  }
+}
+
+export async function getMovieListsUpToPages(pages: {
+  nowPlaying: number
+  popular: number
+  topRated: number
+  upcoming: number
+}): Promise<MovieListsBundle> {
+  const [nowPlaying, popular, topRated, upcoming] = await Promise.all([
+    getMovieListUpToPage("now_playing", pages.nowPlaying),
+    getMovieListUpToPage("popular", pages.popular),
+    getMovieListUpToPage("top_rated", pages.topRated),
+    getMovieListUpToPage("upcoming", pages.upcoming),
   ])
 
   return {

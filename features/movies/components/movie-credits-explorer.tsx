@@ -50,24 +50,33 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
       <section className="mb-8">
         <h2 className="text-lg font-semibold text-white">Cast ({filteredCast.length})</h2>
         {filteredCast.length ? (
-          <div className="mt-3 grid gap-2">
+          <div className="mt-3 grid gap-2.5 sm:gap-2">
             {filteredCast.map((member) => (
               <article
                 key={`${member.id}-${member.order}`}
-                className="grid grid-cols-[42px_1fr] gap-2 rounded-lg bg-black/25 px-3 py-2 sm:grid-cols-[42px_1fr_1fr_auto] sm:items-center sm:gap-3"
+                className="rounded-lg bg-black/25 p-2.5 sm:grid sm:grid-cols-[42px_1fr_1fr_auto] sm:items-center sm:gap-3 sm:px-3 sm:py-2"
               >
-                <div className="relative h-10 w-10 overflow-hidden rounded-full bg-white/10">
-                  <Image
-                    src={getMoviePosterUrl(member.profile_path, "w500")}
-                    alt={member.name}
-                    fill
-                    sizes="40px"
-                    className="object-cover"
-                  />
+                <div className="flex items-start gap-2.5 sm:contents">
+                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-white/10 sm:h-10 sm:w-10">
+                    <Image
+                      src={getMoviePosterUrl(member.profile_path, "w500")}
+                      alt={member.name}
+                      fill
+                      sizes="(max-width: 640px) 48px, 40px"
+                      className="object-cover"
+                    />
+                  </div>
+
+                  <div className="min-w-0 flex-1 sm:contents">
+                    <p className="truncate text-sm font-semibold text-white sm:font-medium">
+                      {member.name}
+                    </p>
+                    <p className="mt-0.5 line-clamp-2 text-xs text-slate-300/90 sm:mt-0 sm:text-sm">
+                      {member.character || "Unknown role"}
+                    </p>
+                    <p className="mt-1 text-[11px] text-slate-400 sm:mt-0 sm:text-xs">#{member.order}</p>
+                  </div>
                 </div>
-                <p className="text-sm font-medium text-white">{member.name}</p>
-                <p className="text-xs text-slate-300/85 sm:text-sm">{member.character || "Unknown role"}</p>
-                <p className="text-[11px] text-slate-400 sm:text-xs">#{member.order}</p>
               </article>
             ))}
           </div>
@@ -79,11 +88,11 @@ export function MovieCreditsExplorer({ cast, crew }: MovieCreditsExplorerProps) 
       <section>
         <h2 className="text-lg font-semibold text-white">Crew ({filteredCrew.length})</h2>
         {filteredCrew.length ? (
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <div className="mt-3 grid gap-2.5 sm:grid-cols-2 sm:gap-2">
             {filteredCrew.map((member) => (
               <article
                 key={`${member.id}-${member.job}`}
-                className="rounded-lg bg-black/25 px-3 py-2"
+                className="rounded-lg bg-black/25 px-3 py-2.5"
               >
                 <p className="text-xs uppercase tracking-wide text-slate-400">
                   {member.department}
