@@ -24,7 +24,9 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
         .slice(0, 80),
     [safeImages],
   )
+  const mobileVisibleImages = sortedImages.slice(0, 3)
   const visibleImages = sortedImages.slice(0, 5)
+  const mobileRemainingCount = Math.max(0, sortedImages.length - mobileVisibleImages.length)
   const remainingCount = Math.max(0, sortedImages.length - visibleImages.length)
 
   useEffect(() => {
@@ -87,42 +89,61 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
 
       {visibleImages.length ? (
         <div className="mt-3 space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            {visibleImages.slice(0, 2).map((image, index) => (
-              <button
-                type="button"
-                key={`top-${image.file_path}`}
-                onClick={() => openImageAtIndex(index)}
-                className="group relative h-[120px] overflow-hidden rounded-xl bg-black/40 sm:h-[140px]"
-              >
-                <Image
-                  src={getMovieBackdropUrl(image.file_path)}
-                  alt={`Movie image ${index + 1}`}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 30vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                />
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-3 gap-3">
-            {visibleImages.slice(2).map((image, index) => {
-              const absoluteIndex = index + 2
-              const isLastVisible = absoluteIndex === visibleImages.length - 1 && remainingCount > 0
+          <div className="grid grid-cols-2 gap-2 sm:hidden">
+            {mobileVisibleImages.map((image, index) => {
+              const isHeroImage = index === 0
+              const isLastMobileVisible =
+                index === mobileVisibleImages.length - 1 && mobileRemainingCount > 0
 
               return (
                 <button
                   type="button"
-                  key={`bottom-${image.file_path}`}
-                  onClick={() => openImageAtIndex(absoluteIndex)}
-                  className="group relative h-[82px] overflow-hidden rounded-lg bg-black/40 sm:h-[90px]"
+                  key={`mobile-image-${image.file_path}`}
+                  onClick={() => openImageAtIndex(index)}
+                  className={[
+                    "group relative overflow-hidden bg-black/40",
+                    isHeroImage ? "col-span-2 h-[164px] rounded-xl" : "h-[96px] rounded-lg",
+                  ].join(" ")}
                 >
                   <Image
                     src={getMovieBackdropUrl(image.file_path)}
-                    alt={`Movie image ${absoluteIndex + 1}`}
+                    alt={`Movie image ${index + 1}`}
                     fill
-                    sizes="(max-width: 768px) 33vw, 20vw"
+                    sizes="(max-width: 640px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                  {isLastMobileVisible && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/55 text-lg font-semibold text-white">
+                      +{mobileRemainingCount}
+                    </div>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+
+          <div className="hidden grid-cols-2 gap-3 sm:grid">
+            {visibleImages.map((image, index) => {
+              const isHeroImage = index === 0
+              const isLastVisible = index === visibleImages.length - 1 && remainingCount > 0
+
+              return (
+                <button
+                  type="button"
+                  key={`image-${image.file_path}`}
+                  onClick={() => openImageAtIndex(index)}
+                  className={[
+                    "group relative overflow-hidden bg-black/40",
+                    isHeroImage
+                      ? "col-span-2 h-[184px] rounded-xl md:h-[208px]"
+                      : "h-[104px] rounded-lg md:h-[116px]",
+                  ].join(" ")}
+                >
+                  <Image
+                    src={getMovieBackdropUrl(image.file_path)}
+                    alt={`Movie image ${index + 1}`}
+                    fill
+                    sizes="(max-width: 1024px) 33vw, 20vw"
                     className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                   {isLastVisible && (
@@ -150,7 +171,7 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
             <button
               type="button"
               onClick={() => setActiveIndex(null)}
-              className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20"
+              className="absolute right-4 top-4 z-20 rounded-full bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20"
             >
               Close
             </button>
@@ -159,15 +180,7 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
               Image {activeIndex + 1} of {sortedImages.length}
             </div>
 
-            <button
-              type="button"
-              onClick={() => navigateImage("prev")}
-              className="absolute left-3 rounded bg-black/45 px-2 py-3 text-sm text-white hover:bg-black/70"
-            >
-              {"<"}
-            </button>
-
-            <div className="relative h-[70vh] w-[92vw] max-w-6xl overflow-hidden rounded-lg">
+            <div className="relative h-[70vh] w-[96vw] max-w-6xl overflow-hidden rounded-lg md:w-[92vw]">
               {isImageLoading && (
                 <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/45">
                   <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/25 border-t-white" />
@@ -190,8 +203,18 @@ export function MovieDetailsImages({ images }: MovieDetailsImagesProps) {
 
             <button
               type="button"
+              aria-label="Previous image"
+              onClick={() => navigateImage("prev")}
+              className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-md bg-black/55 px-2.5 py-3 text-sm text-white hover:bg-black/75 md:left-4"
+            >
+              {"<"}
+            </button>
+
+            <button
+              type="button"
+              aria-label="Next image"
               onClick={() => navigateImage("next")}
-              className="absolute right-3 rounded bg-black/45 px-2 py-3 text-sm text-white hover:bg-black/70"
+              className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-md bg-black/55 px-2.5 py-3 text-sm text-white hover:bg-black/75 md:right-4"
             >
               {">"}
             </button>
