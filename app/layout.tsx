@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full flex flex-col min-h-screen`}
       >
-        <Navbar searchData={[]} />
+        <Navbar />
         {children}
       </body>
     </html>

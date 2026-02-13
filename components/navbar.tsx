@@ -1,22 +1,28 @@
 // @/components/custom-ui/navbar.tsx
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useSearch } from "@/hooks/use-search"
 import { SearchOverlay } from "./search-overlay"
-import { Movie } from "@/types/movie"
 import { NAV_LINKS } from "@/components/navigation/nav-config"
 import { NavLogo } from "@/components/navigation/nav-logo"
 import { DesktopNav } from "@/components/navigation/desktop-nav"
 import { NavbarActions } from "@/components/navigation/navbar-actions"
 
-type NavbarProps = {
-    searchData: Movie[] // Przekazujemy dane do wyszukiwarki
-    onSelectMovie?: (movie: Movie) => void
-}
-
-export const Navbar = ({ searchData, onSelectMovie }: NavbarProps) => {
-    const { isOpen, setIsOpen, query, setQuery, filteredResults, closeSearch } =
-        useSearch(searchData)
+export const Navbar = () => {
+    const router = useRouter()
+    const {
+        isOpen,
+        setIsOpen,
+        query,
+        setQuery,
+        activeType,
+        setActiveType,
+        results,
+        isLoading,
+        error,
+        closeSearch,
+    } = useSearch()
 
     return (
         <>
@@ -35,8 +41,23 @@ export const Navbar = ({ searchData, onSelectMovie }: NavbarProps) => {
                 query={query}
                 onQueryChange={setQuery}
                 onClose={closeSearch}
-                results={filteredResults}
-                onSelect={(m) => onSelectMovie?.(m)}
+                activeType={activeType}
+                onTypeChange={setActiveType}
+                results={results}
+                isLoading={isLoading}
+                error={error}
+                onSelect={(item) => {
+                    if (item.mediaType === "movie") {
+                        router.push(`/movies/${item.id}`)
+                        return
+                    }
+
+                    const externalUrl =
+                        item.mediaType === "tv"
+                            ? `https://www.themoviedb.org/tv/${item.id}`
+                            : `https://www.themoviedb.org/person/${item.id}`
+                    window.open(externalUrl, "_blank", "noopener,noreferrer")
+                }}
             />
         </>
     )

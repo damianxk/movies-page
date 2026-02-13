@@ -4,17 +4,22 @@
 import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Search01Icon, Cancel01Icon, Film01Icon } from "@hugeicons/core-free-icons" // Sprawdź czy masz te ikony
+import { Search01Icon, Cancel01Icon, Film01Icon, Tv01Icon, UserIcon } from "@hugeicons/core-free-icons"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
-import { Movie } from "@/types/movie"
+import { Button } from "@/components/ui/button"
+import { type SearchResultItem, type SearchType } from "@/hooks/use-search"
 
 type SearchOverlayProps = {
     isOpen: boolean
     query: string
     onQueryChange: (val: string) => void
     onClose: () => void
-    results: Movie[]
-    onSelect: (movie: Movie) => void
+    activeType: SearchType
+    onTypeChange: (type: SearchType) => void
+    results: SearchResultItem[]
+    isLoading: boolean
+    error: string | null
+    onSelect: (item: SearchResultItem) => void
 }
 
 export const SearchOverlay = ({
@@ -22,7 +27,11 @@ export const SearchOverlay = ({
     query,
     onQueryChange,
     onClose,
+    activeType,
+    onTypeChange,
     results,
+    isLoading,
+    error,
     onSelect,
 }: SearchOverlayProps) => {
     const inputRef = useRef<HTMLInputElement>(null)
@@ -58,7 +67,7 @@ export const SearchOverlay = ({
                             ref={inputRef}
                             value={query}
                             onChange={(e) => onQueryChange(e.target.value)}
-                            placeholder="Search movies, TV shows..."
+                            placeholder="Search movies, TV shows or people..."
                             className="w-full h-16 bg-transparent border-none outline-none text-xl px-4 text-foreground placeholder:text-muted-foreground/50"
                         />
                         <button
@@ -71,37 +80,93 @@ export const SearchOverlay = ({
                     </div>
                 </div>
 
+                <div className="flex items-center gap-2">
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant={activeType === "movie" ? "default" : "secondary"}
+                        onClick={() => onTypeChange("movie")}
+                    >
+                        Movies
+                    </Button>
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant={activeType === "tv" ? "default" : "secondary"}
+                        onClick={() => onTypeChange("tv")}
+                    >
+                        TV
+                    </Button>
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant={activeType === "person" ? "default" : "secondary"}
+                        onClick={() => onTypeChange("person")}
+                    >
+                        People
+                    </Button>
+                </div>
+
                 {/* Results List */}
-                {query.trim() && (
+                {query.trim().length >= 2 && (
                     <div className="bg-card/40 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl max-h-[60vh] overflow-y-auto custom-scrollbar">
-                        {results.length > 0 ? (
+                        {isLoading ? (
+                            <div className="p-12 text-center text-muted-foreground">
+                                <p>Searching...</p>
+                            </div>
+                        ) : error ? (
+                            <div className="p-12 text-center text-destructive">
+                                <p>{error}</p>
+                            </div>
+                        ) : results.length > 0 ? (
                             <div className="p-2 grid gap-1">
-                                {results.map((movie) => (
+                                {results.map((item) => (
                                     <button
-                                        key={movie.id}
+                                        key={`${item.mediaType}-${item.id}`}
                                         onClick={() => {
-                                            onSelect(movie)
+                                            onSelect(item)
                                             onClose()
                                         }}
                                         className="flex items-center gap-4 p-2 rounded-xl hover:bg-white/10 transition-colors group text-left w-full"
                                     >
                                         <div className="relative h-16 w-12 shrink-0 rounded-md overflow-hidden shadow-sm">
                                             <Image
-                                                src={getMoviePosterUrl(movie.poster_path, "w500")}
-                                                alt={movie.title}
+                                                src={getMoviePosterUrl(item.imagePath, "w500")}
+                                                alt={item.title}
                                                 fill
                                                 className="object-cover"
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h4 className="text-base font-medium text-foreground group-hover:text-primary transition-colors truncate">
-                                                {movie.title}
+                                                {item.title}
                                             </h4>
-                                            <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-                                                <HugeiconsIcon icon={Film01Icon} size={12} />
-                                                <span>{movie.release_date?.split("-")[0] || "Unknown"}</span>
-                                                <span>•</span>
-                                                <span className="text-yellow-500/80">★ {movie.vote_average?.toFixed(1)}</span>
+                                            <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                                                <HugeiconsIcon
+                                                    icon={
+                                                        item.mediaType === "movie"
+                                                            ? Film01Icon
+                                                            : item.mediaType === "tv"
+                                                              ? Tv01Icon
+                                                              : UserIcon
+                                                    }
+                                                    size={12}
+                                                />
+                                                <span>{item.subtitle}</span>
+                                                {item.year ? (
+                                                    <>
+                                                        <span>•</span>
+                                                        <span>{item.year}</span>
+                                                    </>
+                                                ) : null}
+                                                {item.voteAverage ? (
+                                                    <>
+                                                        <span>•</span>
+                                                        <span className="text-yellow-500/80">
+                                                            ★ {item.voteAverage.toFixed(1)}
+                                                        </span>
+                                                    </>
+                                                ) : null}
                                             </div>
                                         </div>
                                     </button>
@@ -114,6 +179,10 @@ export const SearchOverlay = ({
                         )}
                     </div>
                 )}
+
+                {query.trim().length > 0 && query.trim().length < 2 ? (
+                    <p className="px-1 text-sm text-muted-foreground">Type at least 2 characters.</p>
+                ) : null}
             </div>
         </div>
     )
