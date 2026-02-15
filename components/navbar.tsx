@@ -2,6 +2,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { useSearch } from "@/hooks/use-search"
 import { SearchOverlay } from "./search-overlay"
 import { NAV_LINKS } from "@/components/navigation/nav-config"
@@ -11,6 +12,7 @@ import { NavbarActions } from "@/components/navigation/navbar-actions"
 
 export const Navbar = () => {
     const router = useRouter()
+    const pathname = usePathname()
     const {
         isOpen,
         setIsOpen,
@@ -24,6 +26,15 @@ export const Navbar = () => {
         closeSearch,
     } = useSearch()
 
+    const linksWithActiveState = NAV_LINKS.map((link) => {
+        const isActive =
+            link.href === "/"
+                ? pathname === "/"
+                : pathname === link.href || pathname.startsWith(`${link.href}/`)
+
+        return { ...link, active: isActive }
+    })
+
     return (
         <>
             <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
@@ -31,8 +42,8 @@ export const Navbar = () => {
 
                 <div className="relative px-4 md:px-8 h-20 flex items-center justify-between">
                     <NavLogo />
-                    <DesktopNav links={NAV_LINKS} />
-                    <NavbarActions links={NAV_LINKS} onOpenSearch={() => setIsOpen(true)} />
+                    <DesktopNav links={linksWithActiveState} />
+                    <NavbarActions links={linksWithActiveState} onOpenSearch={() => setIsOpen(true)} />
                 </div>
             </header>
 

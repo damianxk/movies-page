@@ -12,7 +12,11 @@ export const DesktopNav = ({ links }: DesktopNavProps) => {
         <Link
           key={link.label}
           href={link.href}
-          className="text-sm font-medium text-muted-foreground hover:text-white transition-colors relative"
+          className={
+            link.active
+              ? "text-sm font-medium text-white transition-colors relative"
+              : "text-sm font-medium text-muted-foreground hover:text-white transition-colors relative"
+          }
         >
           {link.label}
         </Link>
