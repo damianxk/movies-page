@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getSeriesDetails } from "@/features/series/server/get-series-details"
 import { getSeriesCredits } from "@/features/series/server/get-series-credits"
@@ -35,6 +36,18 @@ function formatEpisodeRuntime(values: number[]) {
   const hours = Math.floor(runtime / 60)
   const remainingMinutes = runtime % 60
   return `${hours}h ${remainingMinutes}m`
+}
+
+export async function generateMetadata({ params }: SeriesDetailsPageProps): Promise<Metadata> {
+  const { seriesId } = await params
+  const parsedSeriesId = toSeriesId(seriesId)
+
+  if (!parsedSeriesId) {
+    return { title: "Series" }
+  }
+
+  const series = await getSeriesDetails(parsedSeriesId)
+  return { title: series?.name || series?.original_name || "Series" }
 }
 
 export default async function SeriesDetailsPage({ params }: SeriesDetailsPageProps) {

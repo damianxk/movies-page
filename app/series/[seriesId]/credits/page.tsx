@@ -1,4 +1,5 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getSeriesCredits } from "@/features/series/server/get-series-credits"
 import { getSeriesDetails } from "@/features/series/server/get-series-details"
@@ -23,6 +24,24 @@ function uniqueByPersonAndJob<T extends { id: number; job?: string }>(items: T[]
     seen.add(key)
     return true
   })
+}
+
+export async function generateMetadata({ params }: SeriesCreditsPageProps): Promise<Metadata> {
+  const { seriesId } = await params
+  const parsedSeriesId = toSeriesId(seriesId)
+
+  if (!parsedSeriesId) {
+    return { title: "Series credits" }
+  }
+
+  const series = await getSeriesDetails(parsedSeriesId)
+  const seriesTitle = series?.name || series?.original_name
+
+  if (!seriesTitle) {
+    return { title: "Series credits" }
+  }
+
+  return { title: `${seriesTitle} - Credits` }
 }
 
 export default async function SeriesCreditsPage({ params }: SeriesCreditsPageProps) {

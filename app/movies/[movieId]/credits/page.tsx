@@ -1,4 +1,5 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getMovieCredits } from "@/features/movies/server/get-movie-credits"
 import { getMovieDetails } from "@/features/movies/server/get-movie-details"
@@ -23,6 +24,24 @@ function uniqueByPersonAndJob<T extends { id: number; job?: string }>(items: T[]
     seen.add(key)
     return true
   })
+}
+
+export async function generateMetadata({ params }: MovieCreditsPageProps): Promise<Metadata> {
+  const { movieId } = await params
+  const parsedMovieId = toMovieId(movieId)
+
+  if (!parsedMovieId) {
+    return { title: "Movie credits" }
+  }
+
+  const movie = await getMovieDetails(parsedMovieId)
+  const movieTitle = movie?.title || movie?.original_title
+
+  if (!movieTitle) {
+    return { title: "Movie credits" }
+  }
+
+  return { title: `${movieTitle} - Credits` }
 }
 
 export default async function MovieCreditsPage({ params }: MovieCreditsPageProps) {

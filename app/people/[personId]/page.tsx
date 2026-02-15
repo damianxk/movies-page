@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { MovieSectionTitle } from "@/features/movies/components/movie-section-title"
 import { getMoviePosterUrl } from "@/lib/movie-utils"
@@ -87,6 +88,18 @@ function sortCredits(items: CreditItem[]) {
     if (popularityDiff !== 0) return popularityDiff
     return (b.vote_count ?? 0) - (a.vote_count ?? 0)
   })
+}
+
+export async function generateMetadata({ params }: PersonDetailsPageProps): Promise<Metadata> {
+  const { personId } = await params
+  const parsedPersonId = toPersonId(personId)
+
+  if (!parsedPersonId) {
+    return { title: "Person" }
+  }
+
+  const person = await getPersonDetails(parsedPersonId)
+  return { title: person?.name || "Person" }
 }
 
 function CreditsTable({

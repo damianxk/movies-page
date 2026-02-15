@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getMovieDetails } from "@/features/movies/server/get-movie-details"
 import { getMovieCredits } from "@/features/movies/server/get-movie-credits"
@@ -32,6 +33,18 @@ function toMovieId(value: string) {
   const parsed = Number(value)
   if (!Number.isInteger(parsed) || parsed <= 0) return null
   return parsed
+}
+
+export async function generateMetadata({ params }: MovieDetailsPageProps): Promise<Metadata> {
+  const { movieId } = await params
+  const parsedMovieId = toMovieId(movieId)
+
+  if (!parsedMovieId) {
+    return { title: "Movie" }
+  }
+
+  const movie = await getMovieDetails(parsedMovieId)
+  return { title: movie?.title || movie?.original_title || "Movie" }
 }
 
 export default async function MovieDetailsPage({ params }: MovieDetailsPageProps) {
